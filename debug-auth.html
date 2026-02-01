@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Auth Headers</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #00ff00;
+        }
+        button {
+            background: #00ff00;
+            color: #1a1a1a;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        pre {
+            background: #000;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug Authorization Headers</h1>
+    
+    <button onclick="testRequest()">Test /pedidos/mis-pedidos Request</button>
+    
+    <h2>Token from localStorage:</h2>
+    <pre id="token"></pre>
+    
+    <h2>Request Details:</h2>
+    <pre id="output"></pre>
+
+    <script>
+        // Display token
+        const token = localStorage.getItem('token');
+        document.getElementById('token').textContent = token || 'NO TOKEN FOUND';
+
+        async function testRequest() {
+            const output = document.getElementById('output');
+            output.textContent = 'Sending request...\n';
+
+            const url = 'https://gepjyu7iyj.execute-api.us-east-1.amazonaws.com/dev/pedidos/mis-pedidos';
+            const token = localStorage.getItem('token');
+
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            };
+
+            output.textContent += '\n📤 Request URL:\n' + url + '\n';
+            output.textContent += '\n📤 Headers sent:\n' + JSON.stringify(headers, null, 2) + '\n';
+
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: headers
+                });
+
+                output.textContent += '\n📥 Response Status: ' + response.status + '\n';
+                output.textContent += '\n📥 Response Headers:\n';
+                
+                response.headers.forEach((value, key) => {
+                    output.textContent += key + ': ' + value + '\n';
+                });
+
+                const data = await response.text();
+                output.textContent += '\n📥 Response Body:\n' + data;
+
+            } catch (error) {
+                output.textContent += '\n❌ Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
