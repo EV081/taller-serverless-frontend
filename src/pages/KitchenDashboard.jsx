@@ -31,8 +31,9 @@ const KitchenDashboard = (props) => {
                 getInProgressOrders()
             ]);
 
-            setPendingOrders(pendingData.orders || []);
-            setInProgressOrders(inProgressData.orders || []);
+            const sortByDate = (a, b) => new Date(a.created_at) - new Date(b.created_at);
+            setPendingOrders((pendingData.orders || []).slice().sort(sortByDate));
+            setInProgressOrders((inProgressData.orders || []).slice().sort(sortByDate));
         } catch (err) {
             setError(err.message || 'Error al cargar pedidos');
         } finally {

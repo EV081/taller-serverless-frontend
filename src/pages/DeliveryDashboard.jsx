@@ -29,8 +29,9 @@ const DeliveryDashboard = (props) => {
                 getMyOrders()
             ]);
 
-            setAvailableOrders(availableData.orders || []);
-            setMyOrders(myData.orders || []);
+            const sortByDate = (a, b) => new Date(a.created_at) - new Date(b.created_at);
+            setAvailableOrders((availableData.orders || []).slice().sort(sortByDate));
+            setMyOrders((myData.orders || []).slice().sort(sortByDate));
         } catch (err) {
             setError(err.message || 'Error al cargar pedidos');
         } finally {

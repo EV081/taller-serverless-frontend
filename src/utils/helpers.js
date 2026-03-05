@@ -17,7 +17,9 @@ export const formatCurrency = (amount) => {
  * @returns {string} Formatted date string
  */
 export const formatDate = (date) => {
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    // Si el string no tiene info de zona horaria, asumimos UTC (agregamos 'Z')
+    const normalized = typeof date === 'string' && !date.endsWith('Z') && !date.includes('+') ? date + 'Z' : date;
+    const dateObj = typeof normalized === 'string' ? new Date(normalized) : normalized;
     return new Intl.DateTimeFormat('es-PE', {
         year: 'numeric',
         month: 'long',
@@ -33,7 +35,9 @@ export const formatDate = (date) => {
  * @returns {string} Formatted date string
  */
 export const formatDateShort = (date) => {
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    // Si el string no tiene info de zona horaria, asumimos UTC (agregamos 'Z')
+    const normalized = typeof date === 'string' && !date.endsWith('Z') && !date.includes('+') ? date + 'Z' : date;
+    const dateObj = typeof normalized === 'string' ? new Date(normalized) : normalized;
     return new Intl.DateTimeFormat('es-PE', {
         month: 'short',
         day: 'numeric',
